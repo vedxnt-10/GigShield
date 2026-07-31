@@ -76,4 +76,14 @@ npm run dev
 
 ## Screenshots
 
-*(Add 2-3 screenshots of your project in action here)*
+### Dashboard
+![Dashboard](docs/screenshots/dashboard.png)
+
+### Log a Trip (OCR & Manual)
+![Log a Trip](docs/screenshots/log_trip.png)
+
+### Rights Advisor Chatbot
+![Rights Advisor](docs/screenshots/chatbot.png)
+
+### Emergency SOS
+![Emergency SOS](docs/screenshots/sos.png)
