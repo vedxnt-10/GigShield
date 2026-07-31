@@ -3,13 +3,12 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
-  Plus, ChevronRight, Zap, TrendingDown, BarChart3,
+  Plus, ChevronRight, Zap, BarChart3,
   ArrowUpRight, Clock, Package, AlertTriangle, Target, ShieldCheck, Wallet
 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import SOSButton from "../components/SOSButton";
 import NavBar from "../components/NavBar";
-import VerdictBadge from "../components/VerdictBadge";
 import { api } from "../api/client";
 import { DashboardSkeleton } from "../components/Skeleton";
 import ThemeToggle from "../components/ThemeToggle";
@@ -24,13 +23,6 @@ const fmtTime = (iso) => {
   });
 };
 
-const fmtDate = (iso) => {
-  if (!iso) return "";
-  return new Date(iso).toLocaleDateString("en-IN", {
-    day: "numeric", month: "short",
-  });
-};
-
 const weekNum = () => {
   const now = new Date();
   return Math.ceil((now - new Date(now.getFullYear(), 0, 1)) / (7 * 24 * 60 * 60 * 1000));
@@ -41,29 +33,6 @@ const fadeUp = (delay = 0) => ({
   animate: { opacity: 1, y: 0 },
   transition: { duration: 0.45, delay, ease: [0.25, 0.1, 0.25, 1] },
 });
-
-const staggerContainer = {
-  hidden: { opacity: 0 },
-  show: {
-    opacity: 1,
-    transition: { staggerChildren: 0.08 }
-  }
-};
-
-const staggerItem = {
-  hidden: { opacity: 0, x: -10 },
-  show: { opacity: 1, x: 0, transition: { type: "spring", stiffness: 300, damping: 24 } }
-};
-
-// ── Tiny inline verdict indicator ─────────────────────────────────────────
-function VerdictDot({ verdict }) {
-  const cls = {
-    underpaid: "bg-danger",
-    borderline: "bg-warning",
-    fair: "bg-success",
-  }[verdict] ?? "bg-border";
-  return <span className={`inline-block w-2 h-2 rounded-full flex-shrink-0 ${cls}`} />;
-}
 
 // ── Platform bar ──────────────────────────────────────────────────────────
 function PlatformBar({ platform, maxEarnings }) {
@@ -125,7 +94,7 @@ export default function Home() {
       const g = await api.setGoal(parseFloat(goalInput));
       setGoal(g);
       setSettingGoal(false);
-    } catch (e) {
+    } catch (_e) {
       alert("Failed to save goal");
     } finally {
       setSavingGoal(false);

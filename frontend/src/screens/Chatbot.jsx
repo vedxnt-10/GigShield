@@ -53,7 +53,7 @@ export default function Chatbot() {
         },
       ]);
     }
-  }, []);
+  }, [jobId]);
 
   const send = async (text) => {
     const msg = text.trim();
