@@ -1,11 +1,11 @@
 # GigShield
 
-Submission for the **Synaptrix** Hackathon
+Submission for the **Synaptrix** Hackathon.
 
 ## Problem Statement Chosen
 
 **Domain:** GigShield  
-**Problem Statement:** Gig Economy & Informal Sector Tech - AI Companion for Fair Wages & Worker Safety
+**Problem Statement:** Gig Economy & Informal Sector Tech - AI Companion for Fair Wages & Worker Safety.
 
 ## Team
 
