@@ -84,9 +84,8 @@ export default function Settings() {
             <div className="eyebrow mb-2">About GigShield</div>
             <div className="bg-surface border border-border rounded-xl px-4 py-4 shadow-sm text-center">
               <p className="text-xs font-medium text-subtle leading-relaxed">
-                Version 2.0 · Gemini Edition<br />
                 Fair Pay · Safe Routes · Known Rights<br />
-                Built for gig workers, by design.
+                Built for gig workers.
               </p>
             </div>
           </div>

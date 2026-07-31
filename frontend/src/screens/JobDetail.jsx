@@ -131,29 +131,81 @@ export default function JobDetail() {
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.4 }}
         >
-          {/* Verdict */}
+          {/* Verdict & Analysis */}
           {fr && (
             <section className="mb-6">
-              <h3 className="text-xs font-semibold text-muted uppercase tracking-wide mb-3">Verdict</h3>
-              <div className="flex items-baseline gap-3">
-                <VerdictBadge verdict={fr.verdict} />
-                <span className="text-3xl font-bold">
-                  {formatCurrency(fr.actual_pay)}
-                </span>
+              <div className="bg-surface border border-border rounded-2xl p-5 shadow-card relative overflow-hidden">
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-warning to-danger" style={{ opacity: fr.verdict === 'fair' ? 0 : 1 }} />
+                <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-success to-success" style={{ opacity: fr.verdict === 'fair' ? 1 : 0 }} />
+                
+                <div className="flex justify-between items-start mb-6">
+                  <div>
+                    <h3 className="text-[10px] font-bold text-muted uppercase tracking-widest mb-1">{fr.verdict === 'fair' ? 'FAIR COMPENSATION' : 'POSSIBLE UNDERPAYMENT'}</h3>
+                    <div className={`text-xs font-semibold ${fr.verdict === 'fair' ? 'text-success' : 'text-danger'}`}>
+                      {fr.verdict === 'fair' ? 'All good' : 'Action Required'}
+                    </div>
+                  </div>
+                  <div className="text-right">
+                    <div className="text-[10px] font-bold text-muted uppercase tracking-widest mb-1">FAIRNESS SCORE</div>
+                    <div className="text-4xl font-bold tabular-nums">
+                      <span className={fr.verdict === 'fair' ? 'text-success' : 'text-danger'}>
+                        {Math.min(100, Math.round((fr.actual_pay / fr.expected_pay) * 100))}
+                      </span>
+                      <span className="text-lg text-subtle">/100</span>
+                    </div>
+                  </div>
+                </div>
+
+                <div className="w-full h-2 bg-border/50 rounded-full overflow-hidden mb-6">
+                  <motion.div 
+                    className={`h-full ${fr.verdict === 'fair' ? 'bg-success' : 'bg-danger'}`}
+                    initial={{ width: 0 }}
+                    animate={{ width: `${Math.min(100, (fr.actual_pay / fr.expected_pay) * 100)}%` }}
+                    transition={{ duration: 1, delay: 0.2 }}
+                  />
+                </div>
+
+                <p className="text-sm font-medium text-foreground mb-6 leading-relaxed">
+                  {fr.verdict === 'fair' 
+                    ? "This trip appears to be fairly compensated based on local rates."
+                    : `You may have been underpaid by ${formatCurrency(fr.expected_pay - fr.actual_pay)} on this ride.`}
+                </p>
+
+                <div className="bg-background rounded-xl p-4 mb-5">
+                  <div className="flex justify-between mb-3">
+                    <span className="text-sm text-muted">Expected Fare</span>
+                    <span className="text-sm font-medium tabular-nums">{formatCurrency(fr.expected_pay)}</span>
+                  </div>
+                  <div className="flex justify-between mb-3 pb-3 border-b border-border border-dashed">
+                    <span className="text-sm text-muted">Actual Fare</span>
+                    <span className="text-sm font-medium tabular-nums">{formatCurrency(fr.actual_pay)}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-sm font-semibold text-foreground">Difference</span>
+                    <span className={`text-sm font-bold tabular-nums ${fr.verdict === 'fair' ? 'text-success' : 'text-danger'}`}>
+                      {fr.verdict === 'fair' ? 'None' : `-${formatCurrency(fr.expected_pay - fr.actual_pay)}`}
+                    </span>
+                  </div>
+                </div>
+
+                <div>
+                  <div className="flex items-center gap-1.5 mb-2">
+                    <Sparkles size={14} className="text-primary" />
+                    <span className="text-[10px] font-bold text-muted uppercase tracking-wider">AI EXPLANATION</span>
+                  </div>
+                  <p className="text-[13px] text-muted leading-relaxed">
+                    {fr.reason_text}
+                  </p>
+                </div>
               </div>
-              <p className="text-sm mt-2 text-muted max-w-md leading-relaxed">
-                {fr.reason_text}
-              </p>
             </section>
           )}
 
-          {/* Trip data */}
+          {/* Trip data (Simplified) */}
           <section className="mb-6">
-            <h3 className="text-xs font-semibold text-muted uppercase tracking-wide mb-3">Trip Data</h3>
+            <h3 className="text-xs font-semibold text-muted uppercase tracking-wide mb-3">Trip Details</h3>
             <div className="bg-surface border border-border rounded-2xl overflow-hidden shadow-card">
               {[
-                ["Fare Paid", formatCurrency(job.fare_amount)],
-                fr && ["Expected Fair Rate", formatCurrency(fr.expected_pay)],
                 ["Distance", `${job.distance_km} km`],
                 ["Duration", `${job.duration_minutes} min`],
                 ["Area", job.area_tag || "—"],
@@ -161,7 +213,7 @@ export default function JobDetail() {
                   "Start Time",
                   new Date(job.start_time).toLocaleString("en-IN"),
                 ],
-                ["Source", job.source?.charAt(0).toUpperCase() + job.source?.slice(1)],
+                ["Platform", job.platform_id?.charAt(0).toUpperCase() + job.platform_id?.slice(1)],
               ]
                 .filter(Boolean)
                 .map(([k, v], i, arr) => (
@@ -179,23 +231,61 @@ export default function JobDetail() {
 
           {/* AI Safety Analysis */}
           <section className="mb-6">
-            <h3 className="text-xs font-semibold text-muted uppercase tracking-wide mb-3">AI Safety Analysis</h3>
-            <div className="bg-surface border border-border rounded-2xl p-4 shadow-card">
+            <h3 className="text-[10px] font-bold text-muted uppercase tracking-widest mb-3 flex items-center gap-1.5">
+              <Sparkles size={12} className="text-primary" />
+              AI Safety Analysis
+            </h3>
+            
+            <div className="bg-surface border border-border rounded-2xl p-5 shadow-card relative overflow-hidden">
               {loadingSafety ? (
-                <div className="flex flex-col gap-2 animate-pulse">
-                  <div className="h-4 bg-border rounded w-1/3"></div>
-                  <div className="h-3 bg-border rounded w-full"></div>
+                <div className="flex flex-col gap-3 animate-pulse">
+                  <div className="h-4 bg-border rounded w-1/3 mb-2"></div>
+                  <div className="h-2 bg-border rounded w-full"></div>
+                  <div className="h-16 bg-border rounded-xl w-full mt-2"></div>
                 </div>
               ) : safety ? (
-                <div className="flex gap-4 items-start">
-                  <div className={`w-12 h-12 rounded-xl flex items-center justify-center font-bold text-xl flex-shrink-0 ${safety.score >= 8 ? "bg-success-soft text-success border border-success/30" : safety.score >= 5 ? "bg-warning-soft text-warning border border-warning/30" : "bg-danger-soft text-danger border border-danger/30"}`}>
-                    {safety.score}
+                <>
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-warning to-danger" style={{ opacity: safety.score < 8 ? 1 : 0 }} />
+                  <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-success to-success" style={{ opacity: safety.score >= 8 ? 1 : 0 }} />
+                  
+                  <div className="flex justify-between items-start mb-5">
+                    <div>
+                      <h3 className="text-[10px] font-bold text-muted uppercase tracking-widest mb-1">ROUTE RISK LEVEL</h3>
+                      <div className={`text-xs font-semibold ${safety.score >= 8 ? "text-success" : safety.score >= 5 ? "text-warning" : "text-danger"}`}>
+                        {safety.score >= 8 ? "Generally Safe" : safety.score >= 5 ? "Exercise Caution" : "High Risk"}
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-[10px] font-bold text-muted uppercase tracking-widest mb-1">SAFETY SCORE</div>
+                      <div className="text-3xl font-bold tabular-nums">
+                        <span className={safety.score >= 8 ? "text-success" : safety.score >= 5 ? "text-warning" : "text-danger"}>
+                          {safety.score}
+                        </span>
+                        <span className="text-sm text-subtle">/10</span>
+                      </div>
+                    </div>
                   </div>
-                  <div>
-                    <h4 className="font-semibold text-sm mb-1 text-foreground">{safety.score >= 8 ? "Generally Safe" : safety.score >= 5 ? "Exercise Caution" : "High Risk"}</h4>
-                    <p className="text-sm text-muted leading-relaxed">{safety.tip}</p>
+
+                  <div className="w-full h-2 bg-border/50 rounded-full overflow-hidden mb-5">
+                    <motion.div 
+                      className={`h-full ${safety.score >= 8 ? "bg-success" : safety.score >= 5 ? "bg-warning" : "bg-danger"}`}
+                      initial={{ width: 0 }}
+                      animate={{ width: `${(safety.score / 10) * 100}%` }}
+                      transition={{ duration: 1, delay: 0.2 }}
+                    />
                   </div>
-                </div>
+                  
+                  <div className="bg-background rounded-xl p-4 border border-border/50">
+                    <div className="flex items-start gap-2.5">
+                      <div className="w-6 h-6 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0 mt-0.5">
+                        <Sparkles size={12} className="text-primary" />
+                      </div>
+                      <p className="text-[13px] text-muted leading-relaxed font-medium">
+                        {safety.tip}
+                      </p>
+                    </div>
+                  </div>
+                </>
               ) : (
                 <p className="text-sm text-muted">Safety data unavailable.</p>
               )}

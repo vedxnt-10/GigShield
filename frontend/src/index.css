@@ -6,21 +6,21 @@
 @layer base {
   :root {
     --color-surface: 255 255 255;
-    --color-background: 248 249 250;
-    --color-foreground: 9 9 11;
-    --color-muted: 113 113 122;
-    --color-subtle: 161 161 170;
-    --color-border: 228 228 231;
-    --color-border-light: 244 244 245;
+    --color-background: 252 250 248;
+    --color-foreground: 23 23 23;
+    --color-muted: 115 115 115;
+    --color-subtle: 163 163 163;
+    --color-border: 229 229 229;
+    --color-border-light: 245 245 245;
 
-    --color-danger: 239 68 68;
+    --color-danger: 220 38 38;
     --color-danger-soft: 254 242 242;
-    --color-success: 16 185 129;
-    --color-success-soft: 236 253 245;
-    --color-warning: 245 158 11;
-    --color-warning-soft: 255 251 235;
-    --color-primary: 124 58 237; 
-    --color-primary-soft: 243 232 255;
+    --color-success: 22 163 74;
+    --color-success-soft: 240 253 244;
+    --color-warning: 218 165 32;
+    --color-warning-soft: 254 252 232;
+    --color-primary: 23 23 23; 
+    --color-primary-soft: 245 245 245;
   }
 
   .dark {
@@ -64,7 +64,7 @@
 
   /* ── Section labels ────────────────────────────────────────────── */
   .eyebrow {
-    @apply text-xs font-semibold text-danger uppercase tracking-wide;
+    @apply text-xs font-semibold text-warning uppercase tracking-wide;
   }
 
   .eyebrow-muted {

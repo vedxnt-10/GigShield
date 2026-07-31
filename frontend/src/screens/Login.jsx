@@ -42,7 +42,7 @@ export default function Login() {
       const res = await api.verifyOtp(phone, otp);
       authState.setToken(res.access_token);
       toast.success("Logged in successfully");
-      if (res.user.onboarding_completed) {
+      if (res.display_name) {
         navigate("/", { replace: true });
       } else {
         navigate("/onboarding", { replace: true });
@@ -58,19 +58,26 @@ export default function Login() {
   return (
     <div className="min-h-screen bg-background flex flex-col justify-center px-6">
       <div className="max-w-md w-full mx-auto">
-        <div className="flex items-center justify-center gap-2 mb-8">
-          <ShieldCheck className="text-primary w-7 h-7" />
-          <h1 className="text-3xl font-bold tracking-tight text-foreground">GigShield</h1>
+        <div className="flex flex-col items-center justify-center mb-12">
+          <div className="w-16 h-16 bg-foreground rounded-2xl flex items-center justify-center mb-6 shadow-xl shadow-foreground/10 rotate-3">
+            <ShieldCheck className="text-surface w-8 h-8 -rotate-3" strokeWidth={2.5} />
+          </div>
+          <h1 className="text-4xl font-extrabold tracking-tight text-foreground mb-3">GigShield</h1>
+          <p className="text-muted font-medium text-center text-sm max-w-[260px] leading-relaxed">
+            Take back control of your gig earnings and drive with confidence.
+          </p>
         </div>
 
-        <div className="bg-surface border border-border p-6 sm:p-8 rounded-2xl shadow-soft">
-          <h2 className="text-xl font-bold text-foreground mb-2">
-            {step === "phone" ? "Sign In" : "Verify Number"}
+        <div className="bg-surface/80 backdrop-blur-3xl border border-border p-6 sm:p-8 rounded-[2rem] shadow-[0_8px_30px_rgb(0,0,0,0.04)] relative overflow-hidden">
+          <div className="absolute -top-20 -right-20 w-40 h-40 bg-warning/20 rounded-full blur-3xl pointer-events-none" />
+          
+          <h2 className="text-xl font-extrabold text-foreground mb-2">
+            {step === "phone" ? "Welcome Back" : "Verify Number"}
           </h2>
-          <p className="text-sm text-muted mb-6 leading-relaxed">
+          <p className="text-sm text-muted font-medium mb-8 leading-relaxed">
             {step === "phone" 
               ? "Enter your phone number to access your trips securely." 
-              : `Enter the OTP sent to ${phone}.`}
+              : `We've sent a secure OTP to ${phone}.`}
           </p>
 
           {error && (
@@ -135,7 +142,7 @@ export default function Login() {
           )}
         </div>
         
-        <p className="text-center text-xs font-medium text-subtle mt-8">
+        <p className="text-center text-[10px] font-bold text-muted uppercase tracking-widest mt-10">
           Fair Pay · Safe Routes · Known Rights
         </p>
       </div>

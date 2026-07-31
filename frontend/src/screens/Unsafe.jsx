@@ -4,6 +4,20 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { AlertTriangle, MessageSquare, MapPin, X, Navigation } from "lucide-react";
 import NavBar from "../components/NavBar";
+import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import L from "leaflet";
+
+// Fix default marker icon issue in React Leaflet
+const customIcon = new L.Icon({
+  iconUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon.png",
+  iconRetinaUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-icon-2x.png",
+  shadowUrl: "https://unpkg.com/leaflet@1.9.4/dist/images/marker-shadow.png",
+  iconSize: [25, 41],
+  iconAnchor: [12, 41],
+  popupAnchor: [1, -34],
+  shadowSize: [41, 41]
+});
 
 export default function Unsafe() {
   const navigate = useNavigate();
@@ -96,6 +110,26 @@ export default function Unsafe() {
               </div>
             </div>
           </div>
+
+          {/* Live Map Preview */}
+          {location && (
+            <div className="w-full h-48 rounded-2xl overflow-hidden border border-border shadow-sm mb-6 relative z-0">
+              <MapContainer 
+                center={[location.lat, location.lng]} 
+                zoom={16} 
+                scrollWheelZoom={false}
+                className="w-full h-full"
+              >
+                <TileLayer
+                  attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OSM</a>'
+                  url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+                <Marker position={[location.lat, location.lng]} icon={customIcon}>
+                  <Popup>You are here</Popup>
+                </Marker>
+              </MapContainer>
+            </div>
+          )}
 
           {/* Actions */}
           <div className="w-full space-y-4">

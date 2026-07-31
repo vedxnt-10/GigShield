@@ -5,7 +5,7 @@ from sqlalchemy.orm import Session
 
 from app.database import get_db
 from app.models import Job, FairnessResult, Platform, Verdict
-from app.schemas import DashboardWeekly, PlatformSplit, JobOut
+from app.schemas import DashboardWeekly, PlatformSplit, JobOut, DailyEarning
 from app.dependencies import get_current_user
 from app.models import User
 
@@ -37,6 +37,26 @@ def get_weekly_dashboard(db: Session = Depends(get_db), current_user: User = Dep
         1 for j in jobs
         if j.fairness_result and j.fairness_result.verdict in [Verdict.underpaid, Verdict.borderline]
     )
+    
+    fairness_score = 100
+    if len(jobs) > 0:
+        fairness_score = int(((len(jobs) - flagged_count) / len(jobs)) * 100)
+
+    # Calculate daily earnings (Mon-Sun)
+    day_names = ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"]
+    daily_map = {d: {"amount": 0, "underpaid": False} for d in day_names}
+    
+    for j in jobs:
+        day_str = j.start_time.strftime("%a")
+        if day_str in daily_map:
+            daily_map[day_str]["amount"] += j.fare_amount
+            if j.fairness_result and j.fairness_result.verdict in [Verdict.underpaid, Verdict.borderline]:
+                daily_map[day_str]["underpaid"] = True
+
+    daily_earnings = [
+        DailyEarning(day=d, amount=daily_map[d]["amount"], underpaid=daily_map[d]["underpaid"])
+        for d in day_names
+    ]
 
     # Per-platform split
     platforms = db.query(Platform).filter(Platform.user_id == user_id).all()
@@ -74,4 +94,6 @@ def get_weekly_dashboard(db: Session = Depends(get_db), current_user: User = Dep
         recent_jobs=jobs[:5],
         is_fatigued=is_fatigued,
         fatigue_message=fatigue_message,
+        daily_earnings=daily_earnings,
+        fairness_score=fairness_score,
     )

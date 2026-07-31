@@ -2,7 +2,8 @@
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
-import { ChevronLeft, Calendar } from "lucide-react";
+import { ChevronLeft, Calendar, PieChart as PieChartIcon, ShieldAlert } from "lucide-react";
+import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from "recharts";
 import StatStamp from "../components/StatStamp";
 import SOSButton from "../components/SOSButton";
 import NavBar from "../components/NavBar";
@@ -17,11 +18,15 @@ function formatCurrency(n) {
 export default function WeeklyInsights() {
   const navigate = useNavigate();
   const [insight, setInsight] = useState(null);
+  const [dashboard, setDashboard] = useState(null);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    api.getWeeklyInsight()
-      .then(setInsight)
+    Promise.all([api.getWeeklyInsight(), api.getWeeklyDashboard()])
+      .then(([ins, dash]) => {
+        setInsight(ins);
+        setDashboard(dash);
+      })
       .catch(console.error)
       .finally(() => setLoading(false));
   }, []);
@@ -89,7 +94,7 @@ export default function WeeklyInsights() {
 
         {/* AI Insight */}
         <motion.section
-          className="py-6"
+          className="py-6 border-b border-border"
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.2, duration: 0.4 }}
@@ -102,6 +107,79 @@ export default function WeeklyInsights() {
             </p>
           </div>
         </motion.section>
+
+        {/* Data Visualizations */}
+        {(dashboard?.platform_split?.length > 0 || dashboard?.total_jobs > 0) && (
+          <motion.section
+            className="py-6 border-b border-border"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.25, duration: 0.4 }}
+          >
+            <div className="grid grid-cols-2 gap-4">
+              
+              {/* Platform Split Donut */}
+              {dashboard.platform_split.length > 0 && (
+                <div className="card flex flex-col items-center">
+                  <div className="text-[10px] font-bold text-muted uppercase tracking-wider mb-2 flex items-center gap-1.5 w-full">
+                    <PieChartIcon size={12} />
+                    Platform Split
+                  </div>
+                  <div className="h-32 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={dashboard.platform_split.map(p => ({ name: p.platform_name, value: p.total_earnings }))}
+                          innerRadius={30}
+                          outerRadius={45}
+                          paddingAngle={5}
+                          dataKey="value"
+                          stroke="none"
+                        >
+                          {dashboard.platform_split.map((entry, index) => (
+                            <Cell key={`cell-${index}`} fill={['#171717', '#737373', '#a3a3a3', '#e5e5e5'][index % 4]} />
+                          ))}
+                        </Pie>
+                        <RechartsTooltip formatter={(val) => `₹${val}`} contentStyle={{ fontSize: '12px', borderRadius: '8px' }} />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              )}
+
+              {/* Fairness Ratio Donut */}
+              {dashboard.total_jobs > 0 && (
+                <div className="card flex flex-col items-center">
+                  <div className="text-[10px] font-bold text-muted uppercase tracking-wider mb-2 flex items-center gap-1.5 w-full">
+                    <ShieldAlert size={12} />
+                    Fairness Ratio
+                  </div>
+                  <div className="h-32 w-full">
+                    <ResponsiveContainer width="100%" height="100%">
+                      <PieChart>
+                        <Pie
+                          data={[
+                            { name: 'Fair', value: dashboard.total_jobs - dashboard.flagged_count },
+                            { name: 'Flagged', value: dashboard.flagged_count }
+                          ]}
+                          innerRadius={30}
+                          outerRadius={45}
+                          paddingAngle={5}
+                          dataKey="value"
+                          stroke="none"
+                        >
+                          <Cell fill="#16a34a" />
+                          <Cell fill="#dc2626" />
+                        </Pie>
+                        <RechartsTooltip formatter={(val) => `${val} trips`} contentStyle={{ fontSize: '12px', borderRadius: '8px' }} />
+                      </PieChart>
+                    </ResponsiveContainer>
+                  </div>
+                </div>
+              )}
+            </div>
+          </motion.section>
+        )}
 
         {/* Week dates */}
         <motion.section

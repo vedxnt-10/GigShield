@@ -87,6 +87,11 @@ class PlatformSplit(BaseModel):
     flagged_count: int
 
 
+class DailyEarning(BaseModel):
+    day: str
+    amount: float
+    underpaid: bool
+
 class DashboardWeekly(BaseModel):
     week_start: datetime.datetime
     week_end: datetime.datetime
@@ -98,7 +103,8 @@ class DashboardWeekly(BaseModel):
     recent_jobs: List[JobOut]
     is_fatigued: bool = False
     fatigue_message: Optional[str] = None
-
+    daily_earnings: List[DailyEarning] = []
+    fairness_score: int = 100
 
 # ── Chat ──────────────────────────────────────────────────────────────────
 

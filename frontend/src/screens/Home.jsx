@@ -4,8 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import {
   Plus, ChevronRight, Zap, TrendingDown, BarChart3,
-  ArrowUpRight, Clock, Package, AlertTriangle, Target
+  ArrowUpRight, Clock, Package, AlertTriangle, Target, ShieldCheck, Wallet
 } from "lucide-react";
+import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
 import SOSButton from "../components/SOSButton";
 import NavBar from "../components/NavBar";
 import VerdictBadge from "../components/VerdictBadge";
@@ -265,28 +266,34 @@ export default function Home() {
           )}
         </motion.section>
 
-        {/* ── Metric Pills ───────────────────────────────────────── */}
+        {/* ── KPI Grid ───────────────────────────────────────── */}
         <motion.section className="py-5 border-b border-border" {...fadeUp(0.05)}>
-          <div className="grid grid-cols-3 gap-3">
+          <div className="grid grid-cols-2 gap-3">
             {[
               {
-                label: "Hours Worked",
-                value: `${dashboard?.total_hours ?? 0}h`,
-                icon: Clock,
+                label: "Weekly Earnings",
+                value: fmt(dashboard?.total_earnings ?? 0),
+                icon: Wallet,
                 color: "text-foreground",
               },
               {
-                label: "Trips Logged",
-                value: dashboard?.total_jobs ?? 0,
-                icon: Package,
-                color: "text-foreground",
+                label: "Fairness Score",
+                value: `${dashboard?.fairness_score ?? 100}/100`,
+                icon: ShieldCheck,
+                color: (dashboard?.fairness_score ?? 100) > 80 ? "text-success" : "text-warning",
               },
               {
-                label: "Flagged",
+                label: "Underpaid Rides",
                 value: flagged,
                 icon: AlertTriangle,
                 color: flagged > 0 ? "text-danger" : "text-success",
                 onClick: () => navigate("/jobs?verdict=underpaid"),
+              },
+              {
+                label: "Hours Worked",
+                value: `${dashboard?.total_hours ?? 0}H`,
+                icon: Clock,
+                color: "text-foreground",
               },
             ].map(({ label, value, icon: Icon, color, onClick }) => (
               <motion.div
@@ -296,16 +303,42 @@ export default function Home() {
                 whileHover={{ scale: 1.02 }}
                 whileTap={{ scale: 0.98 }}
               >
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-[11px] font-medium text-muted">{label.split(" ")[0]}</span>
-                  <Icon size={14} strokeWidth={1.8} className={`${color} opacity-60`} />
+                <div className="flex items-center justify-between mb-3">
+                  <span className="text-[11px] font-bold text-muted uppercase tracking-wider">{label}</span>
+                  <Icon size={14} strokeWidth={2} className={`${color} opacity-80`} />
                 </div>
                 <div className={`text-2xl font-bold tabular-nums ${color}`}>{value}</div>
-                <div className="text-[11px] text-subtle font-medium mt-0.5">
-                  {label.split(" ").slice(1).join(" ") || "this week"}
-                </div>
               </motion.div>
             ))}
+          </div>
+        </motion.section>
+
+        {/* ── Weekly Earnings Chart ──────────────────────────────── */}
+        <motion.section className="py-5 border-b border-border" {...fadeUp(0.08)}>
+          <div className="section-header">
+            <div className="text-xs font-semibold text-muted flex items-center gap-1.5 uppercase tracking-wide">
+              <BarChart3 size={12} />
+              Weekly Earnings
+            </div>
+          </div>
+          <div className="h-48 w-full mt-4">
+            <ResponsiveContainer width="100%" height="100%">
+              <BarChart data={dashboard?.daily_earnings ?? []} margin={{ top: 10, right: 0, left: -25, bottom: 0 }}>
+                <XAxis dataKey="day" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'rgb(var(--color-muted))' }} />
+                <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: 'rgb(var(--color-muted))' }} tickFormatter={(val) => `₹${val}`} />
+                <Tooltip 
+                  cursor={{ fill: 'transparent' }}
+                  contentStyle={{ borderRadius: '12px', border: '1px solid var(--color-border)', backgroundColor: 'var(--color-surface)', fontSize: '12px', fontWeight: 'bold' }} 
+                  itemStyle={{ color: 'var(--color-foreground)' }}
+                  formatter={(value) => [`₹${value}`, 'Earnings']}
+                />
+                <Bar dataKey="amount" radius={[4, 4, 0, 0]} maxBarSize={40}>
+                  {(dashboard?.daily_earnings ?? []).map((entry, index) => (
+                    <Cell key={`cell-${index}`} fill={entry.underpaid ? '#ef4444' : '#22c55e'} />
+                  ))}
+                </Bar>
+              </BarChart>
+            </ResponsiveContainer>
           </div>
         </motion.section>
 
@@ -358,68 +391,60 @@ export default function Home() {
           </motion.section>
         )}
 
-        {/* ── Recent Jobs ─────────────────────────────────────────── */}
+        {/* ── Recent Jobs Timeline ─────────────────────────────────── */}
         <motion.section className="py-5" {...fadeUp(0.15)}>
           <div className="section-header">
-            <div className="text-sm font-semibold text-foreground">Recent Trips</div>
+            <div className="text-sm font-semibold text-foreground">Today's Timeline</div>
             <button
-              className="btn-ghost py-1 px-2 text-xs"
+              className="btn-ghost py-1 px-2 text-xs flex items-center gap-1"
               onClick={() => navigate("/jobs")}
             >
-              See all
+              View All Rides <ChevronRight size={12} />
             </button>
           </div>
 
-          <motion.div 
-            className="bg-surface rounded-2xl border border-border overflow-hidden shadow-card"
-            variants={staggerContainer}
-            initial="hidden"
-            animate="show"
-          >
-            {(dashboard?.recent_jobs ?? []).map((job, i, arr) => (
-              <motion.div
-                variants={staggerItem}
-                whileTap={{ scale: 0.98 }}
-                key={job.id}
-                className={`job-row group ${i < arr.length - 1 ? "border-b border-border/60" : ""}`}
-                onClick={() => navigate(`/jobs/${job.id}`)}
-              >
-                <div className="flex items-center gap-3 flex-1 min-w-0">
-                  {job.fairness_result && (
-                    <VerdictDot verdict={job.fairness_result.verdict} />
-                  )}
-                  <div className="min-w-0">
-                    <div className="text-sm font-medium truncate">
-                      {fmtDate(job.start_time)} · {fmtTime(job.start_time)}
-                    </div>
-                    <div className="text-xs text-muted truncate">
-                      {job.area_tag ?? "—"} · {job.distance_km}km · {job.duration_minutes}min
-                    </div>
-                  </div>
-                </div>
-                <div className="flex items-center gap-2.5 flex-shrink-0 ml-3">
-                  <span className="text-base font-bold tabular-nums">
-                    {fmt(job.fare_amount)}
-                  </span>
-                  {job.fairness_result && (
-                    <VerdictBadge verdict={job.fairness_result.verdict} />
-                  )}
-                  <ChevronRight
-                    size={14}
-                    strokeWidth={1.5}
-                    className="text-subtle group-hover:text-muted transition-colors"
-                  />
-                </div>
-              </motion.div>
-            ))}
+          <div className="overflow-x-auto pb-4 pt-2 scrollbar-hide">
+            <div className="flex items-start min-w-max relative px-2">
+              {/* Connecting Background Line */}
+              <div className="absolute top-[9px] left-8 right-8 h-0.5 bg-border -z-10" />
 
-            {!dashboard?.recent_jobs?.length && (
-              <div className="px-4 py-8 text-center">
-                <Package size={24} strokeWidth={1.2} className="text-subtle mx-auto mb-2" />
-                <p className="text-sm text-muted">No trips logged yet.</p>
-              </div>
-            )}
-          </motion.div>
+              {(dashboard?.recent_jobs ?? []).map((job, i) => {
+                const isFair = job.fairness_result?.verdict === "fair";
+                const dotColor = isFair ? "bg-success border-success-soft" : "bg-danger border-danger-soft";
+                const textColor = isFair ? "text-success" : "text-danger";
+                
+                return (
+                  <motion.div
+                    key={job.id}
+                    className="flex flex-col items-center w-28 cursor-pointer group"
+                    onClick={() => navigate(`/jobs/${job.id}`)}
+                    whileHover={{ y: -2 }}
+                  >
+                    <div className={`w-5 h-5 rounded-full border-4 ${dotColor} flex-shrink-0 z-10 mb-3 group-hover:scale-110 transition-transform`} />
+                    <div className="text-[10px] font-semibold text-muted uppercase tracking-wider mb-1">
+                      {fmtTime(job.start_time)}
+                    </div>
+                    <div className="text-sm font-bold tabular-nums mb-1">
+                      {fmt(job.fare_amount)}
+                    </div>
+                    <div className="text-[10px] text-subtle mb-1.5">
+                      {job.distance_km} km
+                    </div>
+                    <div className={`text-[10px] font-bold ${textColor}`}>
+                      {isFair ? "Fair" : "Underpaid"}
+                    </div>
+                  </motion.div>
+                );
+              })}
+
+              {!dashboard?.recent_jobs?.length && (
+                <div className="w-full text-center py-8">
+                  <Package size={24} strokeWidth={1.2} className="text-subtle mx-auto mb-2" />
+                  <p className="text-sm text-muted">No trips logged today.</p>
+                </div>
+              )}
+            </div>
+          </div>
         </motion.section>
 
         {/* ── Add Job CTA ─────────────────────────────────────────── */}
