@@ -1,15 +1,15 @@
 # GigShield
 
-Submission for the **[Hackathon Name]**
+Submission for the **Synaptrix** Hackathon
 
 ## Problem Statement Chosen
 
 **Domain:** GigShield  
-**Problem Statement:** [Paste the exact one-line problem statement you were given here]
+**Problem Statement:** Gig Economy & Informal Sector Tech - AI Companion for Fair Wages & Worker Safety
 
 ## Team
 
-**Team Name:** [Your Team Name]
+**Team Name:** Prompt & Pray
 
 ## Our Solution
 
@@ -38,7 +38,12 @@ GigShield is a comprehensive empowerment platform for gig economy workers. We bu
 ## Features Implemented
 
 **Core Requirements:**
-- [List your core requirements here]
+- Let the worker log each job (fare, distance, time) manually, or scan a screenshot of their delivery/ride app using OCR to auto-extract the earnings data.
+- A simple fairness-check model that flags a job as "possible underpayment" by comparing the actual payout against an expected fair-rate benchmark for that distance/time.
+- An AI chatbot (LLM API) that explains, in simple language, things like "is this fare fair?", "what are my rights?", or "how do I raise a complaint?"
+- A dashboard summarizing weekly earnings, flagged underpayments, and total hours worked.
+- Multi-platform earnings aggregator - let the worker log jobs from more than one gig app and see all their earnings unified in a single dashboard.
+- An AI-generated weekly insight summary that goes beyond raw numbers - e.g., "You earned 12% less this week, and most of the underpayment happened during night shifts."
 
 **Bonus Features Attempted:**
 - AI-generated route safety score based on time of day and area
