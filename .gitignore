@@ -1,0 +1,74 @@
+# Environment variables
+.env
+backend/.env
+frontend/.env
+*.env
+.env.*
+
+# Python / Backend
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+share/python-wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+.venv
+venv/
+ENV/
+env.bak/
+venv.bak/
+.coverage
+.tox
+.nox
+.hypothesis
+.pytest_cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+.hypothesis/
+celerybeat-schedule
+celerybeat.pid
+
+# SQLite Databases
+*.sqlite3
+*.db
+*.db-journal
+backend/gigshield.db
+backend/gigshield.db-journal
+
+# Node / Frontend
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+lerna-debug.log*
+frontend/dist/
+frontend/dist-ssr/
+*.local
+
+# macOS
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Docs (As requested)
+docs/
