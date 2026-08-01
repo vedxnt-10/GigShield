@@ -2,8 +2,6 @@
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Camera, PenLine, ArrowRight, ChevronLeft, Zap } from "lucide-react";
-import SOSButton from "../components/SOSButton";
-import NavBar from "../components/NavBar";
 
 export default function AddJobChooseMethod() {
   const navigate = useNavigate();
@@ -12,7 +10,7 @@ export default function AddJobChooseMethod() {
     <div className="min-h-screen bg-background pb-28">
       {/* Top bar */}
       <div className="bg-surface border-b border-border px-5 sticky top-0 z-30">
-        <div className="max-w-2xl mx-auto flex items-center h-14">
+        <div className="max-w-7xl mx-auto flex items-center h-14">
           <button
             className="flex items-center gap-1.5 text-muted hover:text-foreground transition-colors"
             onClick={() => navigate("/")}
@@ -24,7 +22,7 @@ export default function AddJobChooseMethod() {
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto px-5 pt-8">
+      <div className="max-w-7xl mx-auto px-5 pt-8">
         <motion.div
           initial={{ opacity: 0, y: 10 }}
           animate={{ opacity: 1, y: 0 }}
@@ -113,9 +111,6 @@ export default function AddJobChooseMethod() {
           </div>
         </motion.div>
       </div>
-
-      <SOSButton />
-      <NavBar />
     </div>
   );
 }

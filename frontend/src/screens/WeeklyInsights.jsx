@@ -5,8 +5,6 @@ import { motion } from "framer-motion";
 import { ChevronLeft, Calendar, PieChart as PieChartIcon, ShieldAlert } from "lucide-react";
 import { PieChart, Pie, Cell, ResponsiveContainer, Tooltip as RechartsTooltip, Legend } from "recharts";
 import StatStamp from "../components/StatStamp";
-import SOSButton from "../components/SOSButton";
-import NavBar from "../components/NavBar";
 import { api } from "../api/client";
 
 import { DetailSkeleton } from "../components/Skeleton";
@@ -35,7 +33,7 @@ export default function WeeklyInsights() {
     return (
       <div className="min-h-screen bg-background">
         <div className="bg-surface/70 backdrop-blur-xl border-b border-border px-5 sticky top-0 z-30 shadow-[0_1px_0_rgba(0,0,0,0.02)]">
-          <div className="max-w-2xl mx-auto flex items-center h-14">
+          <div className="max-w-7xl mx-auto flex items-center h-14">
             <button
               className="flex items-center gap-1.5 text-muted transition-colors opacity-50 cursor-default"
             >
@@ -51,10 +49,10 @@ export default function WeeklyInsights() {
   }
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-background pb-8">
       {/* Top bar */}
       <div className="bg-surface/70 backdrop-blur-xl border-b border-border px-5 sticky top-0 z-30 shadow-[0_1px_0_rgba(0,0,0,0.02)]">
-        <div className="max-w-2xl mx-auto flex items-center h-14">
+        <div className="max-w-7xl mx-auto flex items-center h-14">
           <button
             className="flex items-center gap-1.5 text-muted hover:text-foreground transition-colors"
             onClick={() => navigate(-1)}
@@ -66,7 +64,7 @@ export default function WeeklyInsights() {
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto px-5">
+      <div className="max-w-7xl mx-auto px-5">
         {/* Hero */}
         <motion.section
           className="pt-6 pb-5 border-b border-border"
@@ -140,7 +138,11 @@ export default function WeeklyInsights() {
                             <Cell key={`cell-${index}`} fill={['#171717', '#737373', '#a3a3a3', '#e5e5e5'][index % 4]} />
                           ))}
                         </Pie>
-                        <RechartsTooltip formatter={(val) => `₹${val}`} contentStyle={{ fontSize: '12px', borderRadius: '8px' }} />
+                        <RechartsTooltip 
+                          formatter={(val) => `₹${val}`} 
+                          contentStyle={{ fontSize: '12px', borderRadius: '8px', backgroundColor: 'rgb(var(--color-surface))', borderColor: 'rgb(var(--color-border))', color: 'rgb(var(--color-foreground))' }} 
+                          itemStyle={{ color: 'rgb(var(--color-foreground))' }} 
+                        />
                       </PieChart>
                     </ResponsiveContainer>
                   </div>
@@ -171,7 +173,11 @@ export default function WeeklyInsights() {
                           <Cell fill="#16a34a" />
                           <Cell fill="#dc2626" />
                         </Pie>
-                        <RechartsTooltip formatter={(val) => `${val} trips`} contentStyle={{ fontSize: '12px', borderRadius: '8px' }} />
+                        <RechartsTooltip 
+                          formatter={(val) => `${val} trips`} 
+                          contentStyle={{ fontSize: '12px', borderRadius: '8px', backgroundColor: 'rgb(var(--color-surface))', borderColor: 'rgb(var(--color-border))', color: 'rgb(var(--color-foreground))' }} 
+                          itemStyle={{ color: 'rgb(var(--color-foreground))' }} 
+                        />
                       </PieChart>
                     </ResponsiveContainer>
                   </div>
@@ -217,9 +223,6 @@ export default function WeeklyInsights() {
           <span className="text-xs font-bold text-foreground">GigShield</span>
         </footer>
       </div>
-
-      <SOSButton />
-      <NavBar />
     </div>
   );
 }

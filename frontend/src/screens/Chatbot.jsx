@@ -4,8 +4,6 @@ import { useNavigate, useSearchParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Send, Mic, MicOff, ChevronLeft, Sparkles } from "lucide-react";
 import ReactMarkdown from "react-markdown";
-import SOSButton from "../components/SOSButton";
-import NavBar from "../components/NavBar";
 import { api } from "../api/client";
 
 const QUICK_QUESTIONS = [
@@ -98,10 +96,10 @@ export default function Chatbot() {
   };
 
   return (
-    <div className="flex flex-col min-h-screen bg-background pb-24">
+    <div className="flex flex-col min-h-screen bg-background pb-8">
       {/* Top bar */}
       <div className="bg-surface border-b border-border px-5 sticky top-0 z-30 shadow-[0_1px_0_rgba(0,0,0,0.02)] flex-shrink-0">
-        <div className="max-w-2xl mx-auto flex items-center h-14">
+        <div className="max-w-7xl mx-auto flex items-center h-14">
           <button
             className="flex items-center gap-1.5 text-muted hover:text-foreground transition-colors"
             onClick={() => navigate(-1)}
@@ -122,7 +120,7 @@ export default function Chatbot() {
       </div>
 
       {/* Messages */}
-      <div className="flex-1 overflow-y-auto px-4 py-6 max-w-2xl mx-auto w-full">
+      <div className="flex-1 overflow-y-auto px-4 py-6 max-w-7xl mx-auto w-full">
         <AnimatePresence initial={false}>
           {messages.map((msg, i) => (
             <motion.div
@@ -187,7 +185,7 @@ export default function Chatbot() {
       </div>
 
       {/* Quick questions */}
-      <div className="px-4 pb-3 max-w-2xl mx-auto w-full">
+      <div className="px-4 pb-3 max-w-7xl mx-auto w-full">
         <div className="flex gap-2 overflow-x-auto pb-1 scrollbar-hide">
           {QUICK_QUESTIONS.map((q) => (
             <button
@@ -202,7 +200,7 @@ export default function Chatbot() {
       </div>
 
       {/* Input bar */}
-      <div className="border-t border-border bg-surface px-4 py-3 max-w-2xl mx-auto w-full flex-shrink-0">
+      <div className="border-t border-border bg-surface px-4 py-3 max-w-7xl mx-auto w-full flex-shrink-0">
         <div className="flex items-center gap-2 bg-background border border-border focus-within:border-primary/50 focus-within:ring-2 focus-within:ring-primary/10 rounded-full px-4 py-2.5 transition-all">
           <input
             ref={inputRef}
@@ -233,9 +231,6 @@ export default function Chatbot() {
           AI generated guidance · Not legal advice
         </p>
       </div>
-
-      <SOSButton />
-      <NavBar />
     </div>
   );
 }

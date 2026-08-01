@@ -5,8 +5,6 @@ import { motion } from "framer-motion";
 import { MessageSquare, FileText, ChevronLeft, Send, Sparkles, Trash2 } from "lucide-react";
 import ReactMarkdown from "react-markdown";
 import VerdictBadge from "../components/VerdictBadge";
-import SOSButton from "../components/SOSButton";
-import NavBar from "../components/NavBar";
 import { DetailSkeleton } from "../components/Skeleton";
 import { api } from "../api/client";
 
@@ -81,7 +79,7 @@ export default function JobDetail() {
     return (
       <div className="min-h-screen bg-background">
         <div className="bg-surface border-b border-border px-5 sticky top-0 z-30 shadow-[0_1px_0_rgba(0,0,0,0.02)]">
-          <div className="max-w-2xl mx-auto flex items-center justify-between h-14">
+          <div className="max-w-7xl mx-auto flex items-center justify-between h-14">
             <button
               className="flex items-center gap-1.5 text-muted transition-colors opacity-50 cursor-default"
             >
@@ -110,10 +108,10 @@ export default function JobDetail() {
   const fr = job.fairness_result;
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-background pb-8">
       {/* Top bar */}
       <div className="bg-surface border-b border-border px-5 sticky top-0 z-30">
-        <div className="max-w-2xl mx-auto flex items-center h-14">
+        <div className="max-w-7xl mx-auto flex items-center h-14">
           <button
             className="flex items-center gap-1.5 text-muted hover:text-foreground transition-colors"
             onClick={() => navigate(-1)}
@@ -125,7 +123,7 @@ export default function JobDetail() {
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto px-5 pt-6">
+      <div className="max-w-7xl mx-auto px-5 pt-6">
         <motion.div
           initial={{ opacity: 0, y: 8 }}
           animate={{ opacity: 1, y: 0 }}
@@ -385,9 +383,6 @@ export default function JobDetail() {
           </div>
         </motion.div>
       </div>
-
-      <SOSButton />
-      <NavBar />
     </div>
   );
 }

@@ -4,8 +4,6 @@ import { useNavigate, useParams } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Copy, Share2, ChevronLeft, CheckCircle } from "lucide-react";
 import toast from "react-hot-toast";
-import SOSButton from "../components/SOSButton";
-import NavBar from "../components/NavBar";
 import { api } from "../api/client";
 import { DetailSkeleton } from "../components/Skeleton";
 
@@ -44,8 +42,8 @@ export default function ComplaintDraft() {
 
   if (loading) {
     return (
-      <div className="flex min-h-screen bg-background pb-24">
-        <div className="flex-1 px-5 py-5 max-w-2xl mx-auto">
+      <div className="flex min-h-screen bg-background pb-8">
+        <div className="flex-1 px-5 py-5 max-w-7xl mx-auto">
           <header className="flex justify-between items-center border-b border-border pb-4 mb-6">
             <button
               className="flex items-center gap-1.5 text-muted transition-colors opacity-50 cursor-default"
@@ -62,8 +60,8 @@ export default function ComplaintDraft() {
   }
 
   return (
-    <div className="flex min-h-screen bg-background pb-24">
-      <div className="flex-1 px-5 py-5 max-w-2xl mx-auto">
+    <div className="flex min-h-screen bg-background pb-8">
+      <div className="flex-1 px-5 py-5 max-w-7xl mx-auto">
         <header className="flex justify-between items-center border-b border-border pb-4 mb-6">
           <button
             className="flex items-center gap-1.5 text-muted hover:text-foreground transition-colors"
@@ -157,9 +155,6 @@ export default function ComplaintDraft() {
           <span className="text-xs font-bold text-foreground">GigShield</span>
         </footer>
       </div>
-
-      <SOSButton />
-      <NavBar />
     </div>
   );
 }

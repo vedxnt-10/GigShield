@@ -1,4 +1,4 @@
-import { BrowserRouter, Routes, Route, Navigate } from "react-router-dom";
+import { BrowserRouter, Routes, Route, Navigate, Outlet } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
 import { ThemeProvider } from "./context/ThemeContext";
 import { authState } from "./api/client";
@@ -15,6 +15,8 @@ import WeeklyInsights from "./screens/WeeklyInsights";
 import ComplaintDraft from "./screens/ComplaintDraft";
 import Settings from "./screens/Settings";
 import Unsafe from "./screens/Unsafe";
+import Layout from "./components/Layout";
+
 
 const ProtectedRoute = ({ children }) => {
   if (!authState.isAuthenticated()) {
@@ -46,18 +48,20 @@ export default function App() {
           <Route path="/login" element={<Login />} />
           
           {/* Protected Routes */}
-          <Route path="/onboarding" element={<ProtectedRoute><Onboarding /></ProtectedRoute>} />
-          <Route path="/" element={<ProtectedRoute><Home /></ProtectedRoute>} />
-          <Route path="/add-job" element={<ProtectedRoute><AddJobChooseMethod /></ProtectedRoute>} />
-          <Route path="/add-job/manual" element={<ProtectedRoute><AddJobManual /></ProtectedRoute>} />
-          <Route path="/add-job/scan" element={<ProtectedRoute><AddJobScan /></ProtectedRoute>} />
-          <Route path="/jobs/:jobId/result" element={<ProtectedRoute><FairnessResult /></ProtectedRoute>} />
-          <Route path="/jobs/:jobId" element={<ProtectedRoute><JobDetail /></ProtectedRoute>} />
-          <Route path="/chatbot" element={<ProtectedRoute><Chatbot /></ProtectedRoute>} />
-          <Route path="/insights" element={<ProtectedRoute><WeeklyInsights /></ProtectedRoute>} />
-          <Route path="/complaints/:jobId" element={<ProtectedRoute><ComplaintDraft /></ProtectedRoute>} />
-          <Route path="/settings" element={<ProtectedRoute><Settings /></ProtectedRoute>} />
-          <Route path="/unsafe" element={<ProtectedRoute><Unsafe /></ProtectedRoute>} />
+          <Route element={<Layout><ProtectedRoute><Outlet /></ProtectedRoute></Layout>}>
+            <Route path="/onboarding" element={<Onboarding />} />
+            <Route path="/" element={<Home />} />
+            <Route path="/add-job" element={<AddJobChooseMethod />} />
+            <Route path="/add-job/manual" element={<AddJobManual />} />
+            <Route path="/add-job/scan" element={<AddJobScan />} />
+            <Route path="/jobs/:jobId/result" element={<FairnessResult />} />
+            <Route path="/jobs/:jobId" element={<JobDetail />} />
+            <Route path="/chatbot" element={<Chatbot />} />
+            <Route path="/insights" element={<WeeklyInsights />} />
+            <Route path="/complaints/:jobId" element={<ComplaintDraft />} />
+            <Route path="/settings" element={<Settings />} />
+            <Route path="/unsafe" element={<Unsafe />} />
+          </Route>
           
           {/* Fallback */}
           <Route path="*" element={<Navigate to="/" replace />} />

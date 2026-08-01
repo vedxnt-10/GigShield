@@ -7,8 +7,6 @@ import {
   ArrowUpRight, Clock, Package, AlertTriangle, Target, ShieldCheck, Wallet
 } from "lucide-react";
 import { BarChart, Bar, XAxis, YAxis, Tooltip, ResponsiveContainer, Cell } from "recharts";
-import SOSButton from "../components/SOSButton";
-import NavBar from "../components/NavBar";
 import { api } from "../api/client";
 import { DashboardSkeleton } from "../components/Skeleton";
 import ThemeToggle from "../components/ThemeToggle";
@@ -105,7 +103,7 @@ export default function Home() {
     return (
       <div className="min-h-screen bg-background">
         <div className="bg-surface/70 backdrop-blur-xl border-b border-border px-5 sticky top-0 z-30 shadow-[0_1px_0_rgba(0,0,0,0.02)]">
-          <div className="max-w-2xl mx-auto flex items-center justify-between h-14">
+          <div className="max-w-7xl mx-auto flex items-center justify-between h-14">
             <span className="text-lg font-bold tracking-tight text-foreground/20">GigShield</span>
           </div>
         </div>
@@ -133,10 +131,10 @@ export default function Home() {
   const maxEarnings = Math.max(...(dashboard?.platform_split ?? []).map(p => p.total_earnings), 1);
 
   return (
-    <div className="min-h-screen bg-background pb-24">
+    <div className="min-h-screen bg-background pb-8">
       {/* Top bar */}
       <div className="bg-surface/70 backdrop-blur-xl border-b border-border px-5 pt-safe-top sticky top-0 z-30">
-        <div className="max-w-2xl mx-auto flex items-center justify-between h-14">
+        <div className="max-w-7xl mx-auto flex items-center justify-between h-14">
           <span className="text-lg font-bold tracking-tight">GigShield</span>
           <div className="flex items-center gap-3">
             {flagged > 0 && (
@@ -163,7 +161,7 @@ export default function Home() {
         </motion.div>
       )}
 
-      <div className="max-w-2xl mx-auto px-5">
+      <div className="max-w-7xl mx-auto px-5">
 
         {/* ── Hero Section ───────────────────────────────────────── */}
         <motion.section className="pt-6 pb-5 border-b border-border" {...fadeUp(0)}>
@@ -186,6 +184,8 @@ export default function Home() {
           </div>
         </motion.section>
 
+        <div className="lg:grid lg:grid-cols-12 lg:gap-8 lg:mt-6">
+          <div className="lg:col-span-8 space-y-6">
         {/* ── Savings Goal ───────────────────────────────────────── */}
         <motion.section className="py-5 border-b border-border" {...fadeUp(0.02)}>
           <div className="section-header">
@@ -237,7 +237,7 @@ export default function Home() {
 
         {/* ── KPI Grid ───────────────────────────────────────── */}
         <motion.section className="py-5 border-b border-border" {...fadeUp(0.05)}>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-2 xl:grid-cols-4 gap-3">
             {[
               {
                 label: "Weekly Earnings",
@@ -416,6 +416,8 @@ export default function Home() {
           </div>
         </motion.section>
 
+          </div>
+          <div className="lg:col-span-4 space-y-6">
         {/* ── Add Job CTA ─────────────────────────────────────────── */}
         <motion.div className="pb-4" {...fadeUp(0.2)}>
           <button
@@ -427,10 +429,9 @@ export default function Home() {
             Log a New Trip
           </button>
         </motion.div>
+          </div>
+        </div>
       </div>
-
-      <SOSButton />
-      <NavBar />
     </div>
   );
 }

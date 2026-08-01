@@ -3,7 +3,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { AlertTriangle, MessageSquare, MapPin, X, Navigation } from "lucide-react";
-import NavBar from "../components/NavBar";
 import { MapContainer, TileLayer, Marker, Popup } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L from "leaflet";
@@ -59,7 +58,7 @@ export default function Unsafe() {
     <div className="min-h-screen bg-background pb-28">
       {/* Top bar */}
       <div className="bg-surface border-b border-border px-5 sticky top-0 z-30">
-        <div className="max-w-2xl mx-auto flex items-center h-14">
+        <div className="max-w-7xl mx-auto flex items-center h-14">
           <button
             className="flex items-center gap-1.5 text-muted hover:text-foreground transition-colors"
             onClick={() => navigate("/")}
@@ -72,7 +71,7 @@ export default function Unsafe() {
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto px-5 pt-8">
+      <div className="max-w-7xl mx-auto px-5 pt-8">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -155,8 +154,6 @@ export default function Unsafe() {
           </p>
         </motion.div>
       </div>
-
-      <NavBar />
     </div>
   );
 }

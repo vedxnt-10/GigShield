@@ -3,8 +3,6 @@ import { useState, useEffect } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { MessageSquare, FileText, ChevronLeft, ArrowRight, CheckCircle2, AlertCircle, AlertTriangle } from "lucide-react";
-import SOSButton from "../components/SOSButton";
-import NavBar from "../components/NavBar";
 import { api } from "../api/client";
 
 // ── Stamp with spring animation ──────────────────────────────────────────
@@ -81,7 +79,7 @@ export default function FairnessResult() {
     return (
       <div className="min-h-screen bg-background">
         <div className="bg-surface border-b border-border px-5 sticky top-0 z-30 shadow-[0_1px_0_rgba(0,0,0,0.02)]">
-          <div className="max-w-2xl mx-auto flex items-center justify-center h-14">
+          <div className="max-w-7xl mx-auto flex items-center justify-center h-14">
             <span className="text-sm font-bold">Fairness Analysis</span>
           </div>
         </div>
@@ -114,7 +112,7 @@ export default function FairnessResult() {
     <div className="min-h-screen bg-background pb-28">
       {/* Top bar */}
       <div className="bg-surface border-b border-border px-5 sticky top-0 z-30 shadow-[0_1px_0_rgba(0,0,0,0.02)]">
-        <div className="max-w-2xl mx-auto flex items-center h-14">
+        <div className="max-w-7xl mx-auto flex items-center h-14">
           <button
             className="flex items-center gap-1.5 text-muted hover:text-foreground transition-colors"
             onClick={() => navigate("/")}
@@ -126,7 +124,7 @@ export default function FairnessResult() {
         </div>
       </div>
 
-      <div className="max-w-2xl mx-auto px-5">
+      <div className="max-w-7xl mx-auto px-5">
 
         {/* ── Hero Verdict ──────────────────────────────────────────── */}
         <motion.section
@@ -270,9 +268,6 @@ export default function FairnessResult() {
           )}
         </AnimatePresence>
       </div>
-
-      <SOSButton />
-      <NavBar />
     </div>
   );
 }

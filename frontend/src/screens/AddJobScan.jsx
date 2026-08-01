@@ -3,8 +3,6 @@ import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
 import { Upload, FileSearch, ChevronLeft } from "lucide-react";
-import SOSButton from "../components/SOSButton";
-import NavBar from "../components/NavBar";
 import AddJobManual from "./AddJobManual";
 import { api } from "../api/client";
 
@@ -171,7 +169,7 @@ export default function AddJobScan() {
   }
 
   return (
-    <div className="flex min-h-screen bg-background pb-24">
+    <div className="flex min-h-screen bg-background pb-8">
       <div className="flex-1 px-5 py-5">
         <header className="flex justify-between items-center border-b border-border pb-4 mb-6">
           <button
@@ -239,9 +237,6 @@ export default function AddJobScan() {
           </div>
         </motion.div>
       </div>
-
-      <SOSButton />
-      <NavBar />
     </div>
   );
 }

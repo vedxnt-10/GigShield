@@ -3,8 +3,6 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { motion } from "framer-motion";
 import { ChevronLeft, User, Bell, Globe, LogOut } from "lucide-react";
-import SOSButton from "../components/SOSButton";
-import NavBar from "../components/NavBar";
 import { api, authState } from "../api/client";
 
 const SETTINGS_ITEMS = [
@@ -26,8 +24,8 @@ export default function Settings() {
   };
 
   return (
-    <div className="flex min-h-screen bg-background pb-24">
-      <div className="flex-1 px-5 py-5 max-w-2xl mx-auto">
+    <div className="flex min-h-screen bg-background pb-8">
+      <div className="flex-1 px-5 py-5 max-w-7xl mx-auto">
         <header className="flex justify-between items-center border-b border-border pb-4 mb-6">
           <div className="text-lg font-bold cursor-pointer" onClick={() => navigate("/")}>
             GigShield
@@ -98,9 +96,6 @@ export default function Settings() {
           <span className="text-xs font-bold text-foreground">GigShield</span>
         </footer>
       </div>
-
-      <SOSButton />
-      <NavBar />
     </div>
   );
 }

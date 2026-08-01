@@ -59,7 +59,7 @@ def call_llm(system_prompt: str, user_content: str) -> str:
             model_name=MODEL_NAME,
             system_instruction=system_prompt
         )
-        resp = model.generate_content(user_content)
+        resp = model.generate_content(user_content, request_options={"timeout": 7.0})
         return resp.text
     except Exception as e:
         print(f"[llm_client] Error calling Gemini: {e}")
@@ -90,7 +90,8 @@ def extract_job_receipt(image_bytes: bytes, mime_type: str) -> dict:
         
         resp = model.generate_content(
             [image_part, prompt],
-            generation_config=genai.GenerationConfig(response_mime_type="application/json")
+            generation_config=genai.GenerationConfig(response_mime_type="application/json"),
+            request_options={"timeout": 15.0}
         )
         raw_text = resp.text.strip()
         if raw_text.startswith("```json"):
@@ -111,7 +112,7 @@ def get_safety_score(area: str, time_str: str) -> dict:
             system_instruction=SAFETY_SCORE_SYSTEM_PROMPT
         )
         user_content = f"Area: {area}\nTime: {time_str}"
-        resp = model.generate_content(user_content)
+        resp = model.generate_content(user_content, request_options={"timeout": 7.0})
         raw_text = resp.text.strip()
         if raw_text.startswith("```json"):
             raw_text = raw_text[7:]
@@ -131,7 +132,7 @@ def get_goal_suggestion(target: float, current: float) -> str:
             system_instruction=SAVINGS_GOAL_SYSTEM_PROMPT
         )
         user_content = f"Target: {target}\nCurrent: {current}"
-        resp = model.generate_content(user_content)
+        resp = model.generate_content(user_content, request_options={"timeout": 7.0})
         return resp.text.strip()
     except Exception as e:
         print(f"[llm_client] Error generating goal suggestion: {e}")
